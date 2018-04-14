@@ -10,8 +10,8 @@ public class Outcast {
     public String outcast(String[] nouns) {
         int[][] lenArr = new int[nouns.length][nouns.length];
         boolean[][] marked = new boolean[nouns.length][nouns.length];
-        for (int i = 0; i < nouns.length; i ++) {
-            for (int j = 0; j < nouns.length; j ++) {
+        for (int i = 0; i < nouns.length; i++) {
+            for (int j = 0; j < nouns.length; j++) {
                 if (i != j) {
                     if (marked[j][i]) lenArr[i][j] = lenArr[j][i];
                     else lenArr[i][j] = wordNet.distance(nouns[i], nouns[j]);
@@ -21,9 +21,9 @@ public class Outcast {
         }
 
         int maxValue = Integer.MIN_VALUE, maxIndex = -1;
-        for (int i = 0; i < nouns.length; i ++) {
+        for (int i = 0; i < nouns.length; i++) {
             int sumValue = 0;
-            for (int j = 0; j < nouns.length; j ++) sumValue += lenArr[i][j];
+            for (int j = 0; j < nouns.length; j++) sumValue += lenArr[i][j];
             if (sumValue > maxValue) {
                 maxValue = sumValue;
                 maxIndex = i;
