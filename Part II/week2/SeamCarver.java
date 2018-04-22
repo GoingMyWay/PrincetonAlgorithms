@@ -206,6 +206,11 @@ public class SeamCarver {
             }
         }
         pic = newPic;
+
+        energy = new double[width()][height()];
+        for (int i = 0; i < width(); i++) {
+            for (int j = 0; j < height(); j++) energy[i][j] = energy(i, j);
+        }
     }
 
     private int calGradient(int rgb1, int rgb2) {
