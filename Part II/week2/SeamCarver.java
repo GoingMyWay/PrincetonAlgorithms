@@ -3,6 +3,8 @@ import edu.princeton.cs.algs4.Picture;
 
 public class SeamCarver {
     private int[][] pic;
+    private double[][] distTo;
+    private int[][] edgeTo;
     private double[][] energy;
     private static final double DEFAULT_ENERGY_VAL = 1000.0;
 
@@ -83,8 +85,8 @@ public class SeamCarver {
     // TODO
     // sequence of indices for vertical seam
     public int[] findVerticalSeam() {
-        double[][] distTo = new double[width()][height()];
-        int[][] edgeTo = new int[width()][height()];
+        distTo = new double[width()][height()];
+        edgeTo = new int[width()][height()];
 
         for (int r = 0; r < height(); r++) {
             for (int c = 0; c < width(); c++) {
@@ -97,7 +99,7 @@ public class SeamCarver {
         // TODO since the picture are sorted, loop from top row to bottom row
         for (int r = 0; r < height()-1; r++) {
             for (int c = 0; c < width(); c++)
-                relaxEdge(distTo, edgeTo, c, r);
+                relaxEdge(c, r);
         }
 
         int[] result = new int[height()];
@@ -115,7 +117,9 @@ public class SeamCarver {
         for (int j = height()-2; j >= 0; j--) {
             result[j] = edgeTo[result[j+1]][j+1];
         }
-
+        // clear memory of distTo and edgeTo and the GC will automatically release memory
+        distTo = null;
+        edgeTo = null;
         return result;
     }
 
@@ -157,7 +161,7 @@ public class SeamCarver {
         removeSeam(seam);
     }
 
-    private void relaxEdge(double[][] distTo, int[][] edgeTo, int c, int r) {
+    private void relaxEdge(int c, int r) {
         // top-to-down
         if (distTo[c][r+1] > distTo[c][r] + energy[c][r+1]) {
             distTo[c][r+1] = distTo[c][r] + energy[c][r+1];
