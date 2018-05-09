@@ -55,6 +55,8 @@ public class BaseballElimination {
 
         for (FlowEdge e : flowNet.adj(s)) {
             if (e.capacity() != e.flow()) {
+                flowNet = null;
+                ff = null;
                 return true;
             }
         }
@@ -69,19 +71,21 @@ public class BaseballElimination {
         int ws = teamsNum - 1, capacity;
         for (int i = 0; i < teamsNum-1; i++) {
             capacity = w[idx] + r[idx] - (i < idx ? w[i] : w[i+1]);
-            if (capacity < 0) return true;
+            if (capacity < 0) {
+                flowNet = null;
+                ff = null;
+                return true;
+            }
             flowNet.addEdge(new FlowEdge(i, t, capacity));
-        }
 
-        for (int i = 0; i < teamsNum-2; i++) {
+            if (i >= teamsNum-2) continue;
+            int ti, tj;
             for (int j = i+1; j < teamsNum-1; j++) {
-                int ti = i;
-                int tj = j;
-                if (i >= idx) ti++;
-                if (j >= idx) tj++;
+                ti = i; tj = j;
+                if (i >= idx) ti++; if (j >= idx) tj++;
                 flowNet.addEdge(new FlowEdge(s, ws, g[ti][tj]));
-                flowNet.addEdge(new FlowEdge(ws, j, Double.POSITIVE_INFINITY));
                 flowNet.addEdge(new FlowEdge(ws, i, Double.POSITIVE_INFINITY));
+                flowNet.addEdge(new FlowEdge(ws, j, Double.POSITIVE_INFINITY));
                 ws++;
             }
         }
@@ -160,7 +164,7 @@ public class BaseballElimination {
     }
 
     public static void main(String[] args) {
-        BaseballElimination division = new BaseballElimination("data/baseball/teams4.txt");
+        BaseballElimination division = new BaseballElimination("data/baseball/teams5.txt");
         for (String team : division.teams()) {
             if (division.isEliminated(team)) {
                 StdOut.print(team + " is eliminated by the subset R = { ");
@@ -175,5 +179,3 @@ public class BaseballElimination {
         }
     }
 }
-
-
